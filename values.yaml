@@ -1,0 +1,38 @@
+mongodb:
+  replicaCount: 1
+  image:
+    repository: mongo
+    tag: latest
+  service:
+    name: mongodb-service
+    type: ClusterIP
+    port: 27017
+  env:
+    mongoRootUsername: admin
+    mongoRootPassword: password
+
+mongoExpress:
+  replicaCount: 1
+  image:
+    repository: mongo-express
+    tag: latest
+  service:
+    name: mongo-express-service
+    type: LoadBalancer
+    port: 8081
+    nodePort: 30001
+  env:
+    mongoRootUsername: admin
+    mongoRootPassword: password
+    mongoServer: mongodb-service
+
+configMap:
+  name: mongodb-configmap
+  data:
+    database_url: mongodb-service
+
+secret:
+  name: mongodb-secret
+  data:
+    mongoRootUsername: YWRtaW4=
+    mongoRootUserPassword: cGFzc3dvcmQ=
