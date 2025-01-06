@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   labels:
     app: mongo-express
+    {{- with .Values.mongoExpress.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   name: mongo-express
 spec:
   replicas: {{ .Values.mongoExpress.replicaCount }}
@@ -13,6 +16,9 @@ spec:
     metadata:
       labels:
         app: mongo-express
+        {{- with .Values.mongoExpress.additionalLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       containers:
       - image: {{ .Values.mongoExpress.image.repository }}:{{ .Values.mongoExpress.image.tag }}
@@ -35,3 +41,6 @@ spec:
             configMapKeyRef:
               key: database_url
               name: {{ .Values.configMap.name }}
+        {{- with .Values.mongoExpress.extraEnv }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}

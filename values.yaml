@@ -10,6 +10,16 @@ mongodb:
   env:
     mongoRootUsername: admin
     mongoRootPassword: password
+  additionalLabels:
+    environment: dev
+    team: backend
+  extraEnv:
+  - name: LOG_LEVEL
+    value: debug
+  - name: MAX_CONNECTIONS
+    value: "100"
+  - name: ENABLE_BACKUPS
+    value: "true"
 
 mongoExpress:
   replicaCount: 1
@@ -25,6 +35,14 @@ mongoExpress:
     mongoRootUsername: admin
     mongoRootPassword: password
     mongoServer: mongodb-service
+  additionalLabels:
+    environment: dev
+    team: backend
+  extraEnv:
+  - name: CUSTOM_ENV_VAR1
+    value: customValue1
+  - name: CUSTOM_ENV_VAR2
+    value: customValue2
 
 configMap:
   name: mongodb-configmap
@@ -36,3 +54,14 @@ secret:
   data:
     mongoRootUsername: YWRtaW4=
     mongoRootUserPassword: cGFzc3dvcmQ=
+
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+  - host: mongoexpress.local
+    paths:
+    - path: /
+      pathType: ImplementationSpecific
+  tls: []
