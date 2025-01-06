@@ -3,4 +3,6 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.configMap.name }}
 data:
-  database_url: mongodb-service
+  database_url: {{ .Values.configMap.data.database_url | default "mongodb-service:27017/" | quote }}
+
+
